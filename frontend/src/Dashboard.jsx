@@ -8,7 +8,7 @@ function Dashboard(){
     const Auth = useAuth();
     console.log(JSON.parse(Auth.info).isTracking);
     const [isTracking, setIsTracking] = useState(JSON.parse(Auth.info).isTracking);
-    const handleTrackingChange = () => {
+    const handleTrackingChange = () => { 
         setIsTracking(!isTracking);
         const newInfo = {
             ...JSON.parse(Auth.info),

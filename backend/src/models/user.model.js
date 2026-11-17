@@ -59,7 +59,7 @@ userSchema.pre("save", async function(next){
     if(this.isModified("password")){
         this.password = await bcrypt.hash(this.password, 10)
     }
-    if(this.isModified("otp")){
+    if(this.isModified("otp")){ //plain OTP text is hashed before saving in the DB
         this.otp = await bcrypt.hash(this.otp, 10);
     }
     next()

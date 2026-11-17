@@ -20,10 +20,10 @@ const registerDB = asynchandler(async (req, res) => {
     if(!user.isVerified){
         throw new ApiError(400, "User not verified");
     }
-    if(user.dbString){
-        await stopTracking(userId);
+    if(user.dbString){ //if user was already tracking a previous database, it closes the existing stream first
+        await stopTracking(userId); //to avoid orphaned DB connections
     }
-    user.dbString = connectionString;
+    user.dbString = connectionString; //updates the respective data of the user in the DB
     user.dbName = dbName;
     try {
         await startTracking(userId, connectionString, dbName);
@@ -49,7 +49,7 @@ const giveRealTimeUpdates = asynchandler(async (req, res) => {
     if(!user.isVerified){
         throw new ApiError(400, "User not verified");
     }
-    const dbUpdates = user.dbUpdates;
+    const dbUpdates = user.dbUpdates; //returns the historical array 
 
     return res.status(200).json(new ApiResponse(200, dbUpdates, "Real time updates sent successfully"));
 });
@@ -70,7 +70,7 @@ const deleteDB = asynchandler(async (req, res) => {
     user.dbName = null;
     user.dbUpdates = [];
     user.isTracking = false;
-    stopTracking(userId);
+    stopTracking(userId); //stops the MongoDB Change Stream
 
     await user.save();
     return res.status(200).json(new ApiResponse(200, {}, "Database deleted successfully"));

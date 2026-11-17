@@ -36,33 +36,33 @@ function DataTable() {
         }
         const res = await response.json();
         if (res.statusCode == 200) {
-          setData(res.data);
+          setData(res.data); //fills state with all past updates
         }   
   } catch (error) {
     console.error(error);
   }
      }
      getData();
-    const socket = io(backend_Url, {
-      query: { userId },
-      transports: ['websocket'], // optional: skip polling
+    const socket = io(backend_Url, { //now goes to socket.js 
+      query: { userId }, //sends userId during handshake
+      transports: ['websocket'], //skips HTTP long-polling , goes straight to websocket
     });
 
     // 2) Subscribe to the user‑specific event
     const eventName = `realtime-update-${userId}`;
     socket.on(eventName, (data) => {
       setData((prevData) => {
-        const newData = [...prevData,data];
+        const newData = [...prevData,data]; //Appends the new event
         return newData;
       })
     });
 
-    // 3) Cleanup on unmount: disconnect socket and remove listeners
-    return () => {
+    // 3) Cleanup on unmount: disconnect socket and remove listeners when navigate('/) runs
+    return () => { //returning a function form useEffect works when the component unmounts
       socket.off(eventName);
       socket.disconnect();
-    };
-  }, []);
+    }; //the disconnect handler in backend (socket.js) is fired as well
+  }, []); //dependency array is empty so it will run once when the component mounts
  
   function formatIso(isoString) {
     const dt = new Date(isoString);
@@ -93,9 +93,9 @@ function DataTable() {
             <th>ID</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody> 
           {data.length > 0 ? (
-            data.slice().reverse().map((item,i) => (
+            data.slice().reverse().map((item,i) => ( //table is rendered reverse so that the latest changes appear on top
               <tr key={i}>
                 <td>{`${formatIso(item.time).time}, ${formatIso(item.time).date}`}</td>
                 <td>{item.collectionName}</td>

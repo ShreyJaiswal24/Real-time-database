@@ -31,7 +31,7 @@ function EnterData({isTracking}) {
         headers: {
           "Content-Type": "application/json",
         },
-        credentials: "include",
+        credentials: "include", //cookie ke saath access tokens bhi automatically jaa raha
         body: JSON.stringify(data),
       });
       if (!response.ok) {

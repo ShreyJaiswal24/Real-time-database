@@ -19,7 +19,7 @@ function LoginCard() {
   const handleChangePass = (evt)=>{
      setPassword(()=> evt.target.value)
   }
-  const handleSubmit = async(e) => {
+  const handleSubmit = async(e) => { //triggered upon entering email and password
     
      e.preventDefault();
     const data = {

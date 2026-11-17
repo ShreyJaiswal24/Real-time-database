@@ -6,7 +6,7 @@ import {BrowserRouter,Route,Routes} from 'react-router-dom'
 import AuthProvider from './Auth/AuthProvider';
 import LoginRoute from './Auth/LoginRoute';
 import PrivateRoute from './Auth/PrivateRoute';
-function App() {
+function App() { //the browser never reload ths whole HTML page when changing the URLS. React Router swaps the components
   return (
     <>
 

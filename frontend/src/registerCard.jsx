@@ -25,26 +25,26 @@ function RegisterCard() {
   const handleOtpChange = (evt) => {
     setOtp(evt.target.value);
   };
-  const handleSubmitOne = async(e) => {
+  const handleSubmitOne = async(e) => { //gets triggered on clicking Get OTP
      e.preventDefault();
     const data = {
       email:emailId,
       password:password
     }
-      const response = await Auth.Register(data);
+      const response = await Auth.Register(data); //calls it to register the email and password
       if(response){
-      setShowOtp(true);
+      setShowOtp(true); //if successfull , hides the get otp button and shows the input OTP field
       setShowOtpbutton(false);}
  
   
   }
-  const handleSubmitTwo = async(e) => {
+  const handleSubmitTwo = async(e) => { //triggers upong entering the OTP 
     e.preventDefault();
     const data = {
       email:emailId,
       otp:otp
     }
-    await Auth.verify(data);
+    await Auth.verify(data); //calls this in backend - auth.controller.js
  }
   return (
     <Container style={{display:'flex',justifyContent:'center',alignItems:'center',height:'80vh'}}>

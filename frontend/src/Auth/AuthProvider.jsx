@@ -6,6 +6,7 @@ import { decodeToken } from "./decode";
 
 const AuthContext = createContext();
 
+//AuthProvider wraps up so that any component wrapped inside a provider can access global values using useContext
 const AuthProvider = ({ children }) => {
   const backend_Url = import.meta.env.VITE_BACKEND_URL;
   const [info, setInfo] = useState(JSON.stringify(decodeToken(localStorage.getItem("accessToken"))) || null)
@@ -57,7 +58,7 @@ const AuthProvider = ({ children }) => {
   const logOut = async() => {
     try {
       const response = await fetch(`${backend_Url}/api/v1/auth/logout`, {
-        method: "POST",
+        method: "POST", //this request is made to the backend to destory the session from server side as well
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -67,7 +68,7 @@ const AuthProvider = ({ children }) => {
       })
        const res = await response.json();
       
-      
+      //we are cleaning up the browser state 
       setToken("");
     localStorage.removeItem("accessToken");
     localStorage.removeItem("refreshToken");
@@ -83,11 +84,11 @@ const AuthProvider = ({ children }) => {
     console.log('register')
     try{
       const response = await fetch(`${backend_Url}/api/v1/auth/register`, {
-        method: "POST",
+        method: "POST", //makes a post request to the backend url to register the data
         headers: {
           "Content-Type": "application/json",
         },
-        credentials: "include",
+        credentials: "include", //so that browser cookies can be set
         body: JSON.stringify(data),
       })
        const res = await response.json();
@@ -117,12 +118,12 @@ const AuthProvider = ({ children }) => {
        
       
       if (res.data.accessToken && res.data.refreshToken) {
-        
+        //stores both the tokens in the broswer Local Storage
         setToken(res.data.accessToken);
         localStorage.setItem("accessToken", res.data.accessToken);
         localStorage.setItem("refreshToken", res.data.refreshToken);
         setInfo(JSON.stringify(decodeToken(res.data.accessToken)));
-        navigate('/dashboard');
+        navigate('/dashboard'); //and now transitions to the main dashboard
         toast("Logged In Successfully");
         return;
       }
@@ -142,6 +143,6 @@ const AuthProvider = ({ children }) => {
 
 export default AuthProvider;
 
-export const useAuth = () => {
+export const useAuth = () => { //useAuth se components dont need to import both useContext and AuthContext
   return useContext(AuthContext);
 };
